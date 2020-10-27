@@ -11,10 +11,7 @@ const match_ep = `${base_url}matches/`;
 
 const fetchApi = url => {
   return fetch(url, {
-    method: 'GET',
-    mode: 'cors',
     headers: {
-      
      'X-Auth_Token' : api_token
     }
   });
