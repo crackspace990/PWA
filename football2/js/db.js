@@ -4,6 +4,7 @@
       case 0:
         upgradeDb.createObjectStore('matches', { 'keyPath': 'id' })
         upgradeDb.createObjectStore('teams', { 'keyPath': 'id' })
+        upgradeDb.createObjectStore('players', {'keypath': 'id'})
     }
   });
 
@@ -16,10 +17,10 @@
       store.put(match)
       return tx.complete;
     }).then(() => {
-      M.toast({ html: `Pertandingan ${match.homeTeam.name} VS ${match.awayTeam.name}\nberhasil disimpan!` })
-      console.log('Pertandingan berhasil disimpan');
+      M.toast({ html: `Match ${match.homeTeam.name} VS ${match.awayTeam.name}\nberhasil disimpan!` })
+      console.log('Match Saved');
     }).catch(err => {
-      console.error('Pertandingan gagal disimpan', err);
+      console.error('Failed to save match', err);
     });
   }
   
@@ -55,10 +56,10 @@
       store.put(team)
       return tx.complete;
     }).then(() => {
-      M.toast({ html: `${team.name} berhasil disimpan!` })
-      console.log('Pertandingan berhasil disimpan');
+      M.toast({ html: `${team.name} Saved` })
+      console.log('Saved');
     }).catch(err => {
-      console.error('Pertandingan gagal disimpan', err);
+      console.error('Failed to Save', err);
     });
   }
 
@@ -83,4 +84,42 @@ var getSaveTeams = () => {
     var store = tx.objectStore('teams');
     return store.getAll();
   })
+}
+
+var insertPlayers = (player) => {
+  dbPromised.then(db => {
+    var tx = db.transaction('player', 'readwrite');
+    var store = tx.objectStore('players')
+    player.createdAt = new Date().getTime()
+    store.put(player)
+    return tx.complete;
+  }).then(() => {
+    M.toast({ html: `${player.name} Saved` })
+    console.log('Saved');
+  }).catch(err => {
+    console.error('Failed to Save', err);
+  });
+}
+
+
+var deletePlayers = (playerId) => {
+dbPromised.then(db => {
+  var tx = db.transaction('players', 'readwrite');
+  var store = tx.objectStore('players');
+  store.delete(playerId);
+  return tx.complete;
+}).then(() => {
+  M.toast({ html: 'Player has been deleted!' });
+  SavePlayer();
+}).catch(err => {
+  console.error('Error: ', err);
+});
+}
+
+var getSavePlayers = () => {
+return dbPromised.then(db => {
+  var tx = db.transaction('players', 'readonly');
+  var store = tx.objectStore('players');
+  return store.getAll();
+})
 }
