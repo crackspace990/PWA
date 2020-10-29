@@ -54,9 +54,14 @@ document.addEventListener("DOMContentLoaded", function() {
             Teams();
           } else if (page === "savedMatch") {
             SaveMatch();
-          } else if (page === "savedteam" ) {
+          } else if (page === "savedTeams" ) {
             SaveTeams();
-          }
+          }  else if (page === "player") {
+            Players();
+          } else if (page === "savedPlayer"){
+            SavePlayers();
+          } 
+          
   
           if (this.status == 200) {
             content.innerHTML = xhttp.responseText;
@@ -65,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
           } else {
             content.innerHTML = "<p>Ups.. halaman tidak dapat diakses.</p>";
           }
-        }
+        } return page;
       };
       xhttp.open("GET", "pages/" + page + ".html", true);
       xhttp.send();
