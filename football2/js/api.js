@@ -1,8 +1,8 @@
 var DataMatch;
 var DataTeam;
 const base_url = "https://api.football-data.org/v2/";
-const api_token = "25bd498e31be4b30814ac795ba3dd267"
-const code_league = 2001 //champion league team_ep = `${base_url}teams/`;
+const api_token = "0cf84df8d7bb47d4b216f4afc5c90606"
+const code_league = 2021 //EPL = `${base_url}teams/`;
 const standing_ep = `${base_url}competitions/${code_league}/standings?standingType=TOTAL` ;
 const team_ep = `${base_url}teams/`;
 const player_ep = `${base_url}players/` ;
@@ -12,7 +12,8 @@ const match_ep = `${base_url}matches/`;
 const fetchApi = url => {
   return fetch(url, {
     headers: {
-     'X-Auth_Token' : api_token
+      
+      'X-Auth-Token': api_token
     }
   });
 }
@@ -69,7 +70,7 @@ const Standings =()=> {
         detail += `
             <tr>
             <td>${result.position}</td>
-            <td><img class="responsive-img" width="24" height="24" src="${ result.team.crestUrl.replace(/^http:\/\//i, 'https://') || 'img/empty_badge.svg'}"> </td>
+            <td><img class="responsive-img" width="24"  src="${ result.team.crestUrl.replace(/^http:\/\//i, 'https://') || 'img/empty_badge.svg'}"> </td>
             <td>${result.team.name}</td>
             <td>${result.playedGames}</td>
             <td>${result.won}</td>
@@ -82,8 +83,8 @@ const Standings =()=> {
 
       html += `
         <div class="card">
-        <div class="card-content">
-        <h5 class="header">${standing.group}</h5>
+        <div class="card-content"> 
+        <h5 class="header">Standings</h5>
         <table>
         <thead>
           <tr>
@@ -104,7 +105,7 @@ const Standings =()=> {
         </div>
       `
     });
-    document.getElementById("articles").innerHTML = html;
+    document.getElementById("standing").innerHTML = html;
 })
 
 }
@@ -112,7 +113,7 @@ const Standings =()=> {
 var getMatches = () => {
 
   if ('caches' in window) {
-    caches.match(match_ep).then(function (response) {
+    caches.match(match_detail_ep).then(function (response) {
         if (response) {
             response.json().then(function (data) {
                 Matches(data);
@@ -120,7 +121,7 @@ var getMatches = () => {
         }
     });
 }
-  return fetchApi(match_ep)
+  return fetchApi(match_detail_ep)
     .then(status)
     .then(json);
 }
@@ -150,7 +151,7 @@ var Matches = () => {
           </div>
             `
     });
-    document.getElementById("articles2").innerHTML = html;
+    document.getElementById("match").innerHTML = html;
   })
 }
 
@@ -180,7 +181,6 @@ var Teams = () => {
     data = JSON.parse(str);
    
     var html = ''
-    
     data.teams.forEach(team => {
       
       html += `
@@ -189,6 +189,7 @@ var Teams = () => {
             <div class="center"><img width="64" height="64" src="${team.crestUrl}"></div>
             <div class="center flow-text">${team.name}</div>
             <div class="center">${team.area.name}</div>
+            <div class="center">${team.website}</div>
           </div>
           <div class="card-action right-align">
               <a class="waves-effect waves-light btn-small green" onclick="insertTeamListener(${team.id})">SAVE TEAMS</a>
@@ -197,10 +198,55 @@ var Teams = () => {
       </div>
     `
     });
-    document.getElementById("articles3").innerHTML = html;
+    document.getElementById("teams").innerHTML = html;
   })
 }
 
+var getPlayer = () => {
+
+  if ('caches' in window) {
+    caches.match(player_ep).then(function (response) {
+        if (response) {
+            response.json().then(function (data) {
+                Players(data);
+            });
+        }
+    });
+}
+  return fetchApi(player_ep)
+    .then(status)
+    .then(json);
+}
+var Players = () => {
+
+  var players = getPlayer()
+  players.then(data => {
+    DataPlayer = data;
+    var str = JSON.stringify(data).replace(/http:/g, 'https:');
+    data = JSON.parse(str);
+
+    var html = ''
+    data.players.forEach(player => {
+    
+      html += `
+            <div class="card">
+              <div class="card-content card-match">
+                <div class="col s10">${player.name}</div>
+                <div class="col s2">${player.dateOfBirth}</div>
+                <div class="col s10">${player.countryOfBirth}</div>
+                <div class="col s2">${player.nationality}</div>
+                <div class="col s10">${player.position}</div>
+              </div>
+              <div class="card-action right-align">
+              <a class="waves-effect waves-light btn-small" onclick="insertPlayerListener(${player.id})">Save Player</a>
+              </div>
+            </div>
+          </div>
+            `
+    });
+    document.getElementById("player").innerHTML = html;
+  })
+}
 
 var SaveMatch = () => {
   var matches = getSaveMatch() 
@@ -233,8 +279,6 @@ var insertMatchListener = matchId => {
 var deleteMatchListener = matchId => {
     deleteMatch(matchId);
   }
-
-
 
 
 var SaveTeams = () => {
@@ -271,7 +315,42 @@ var SaveTeams = () => {
       deleteTeam(teamId);
     }
 
-
+    var getSavePlayers = () => {
+      var players = SavePlayers()
+          players.then(data => {
+            playerData = data;
+            var html = ''
+            data.forEach(player => {
+          
+          html += `
+          <div class="card">
+          <div class="card-content card-match">
+            <div class="col s10">${player.name}</div>
+            <div class="col s2">${player.dateOfBirth}</div>
+            <div class="col s10">${player.countryOfBirth}</div>
+            <div class="col s2">${player.nationality}</div>
+            <div class="col s10">${player.position}</div>
+          </div>
+          <div class="card-action right-align">
+          <a class="waves-effect waves-light btn-small" onclick="insertMatchListener(${match.id})">SAVE MATCH</a>
+          </div>
+        </div>
+      </div>
+        `
+        });
+        document.getElementById("save-player").innerHTML = html;
+      })
+    }
+  
+    var insertPlayerListener = playerId => { 
+      var player = DataPlayer.players.filter(el => el.id == playerId)[0]
+      insertPlayer(player);
+    }
+  
+    var deletePlayerListener = playerId => {
+        deletePlayer(playerId);
+      }    
+  
 
 
 
