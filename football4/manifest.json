@@ -1,0 +1,18 @@
+{
+    "name": "EPL Info",
+    "gcm_sender_id":"226684769668",
+    "short_name": "English Premiere League",
+    "description": "Football Schedule Web App",
+    "start_url": "/index.html",
+    "theme_color": "#006bbb",
+    "background_color": "#ffc872",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "maskable_icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
