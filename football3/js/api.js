@@ -1,5 +1,6 @@
 var DataMatch;
 var DataTeam;
+var DataPlayer;
 const base_url = "https://api.football-data.org/v2/";
 const api_token = "0cf84df8d7bb47d4b216f4afc5c90606"
 const code_league = 2021 //EPL = `${base_url}teams/`;
