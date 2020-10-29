@@ -1,0 +1,17 @@
+{
+    "name": "FootBall",
+    "short_name": "FootBall",
+    "description": "Football Schedule Web App",
+    "start_url": "/index.html",
+    "theme_color": "#006bbb",
+    "background_color": "#ffc872",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
